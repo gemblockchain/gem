@@ -1,5 +1,5 @@
 # Gem Node
 
-Experimental network a fresh FRAME-based Substrate node, ready for hacking 🚀
+A fresh FRAME-based experimental network, ready for hacking :rocket:
 
 [Docs](https://gemchain.tech/)
