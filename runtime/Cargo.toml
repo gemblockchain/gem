@@ -1,9 +1,9 @@
 [package]
+name = 'gem-runtime'
 authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
 edition = '2018'
 homepage = 'https://substrate.dev'
 license = "GPL-3.0"
-name = 'node-template-runtime'
 repository = 'https://github.com/substrate-developer-hub/substrate-node-template/'
 version = '3.0.0'
 

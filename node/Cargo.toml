@@ -5,7 +5,7 @@ description = 'A fresh FRAME-based Substrate node, ready for hacking.'
 edition = '2018'
 homepage = 'https://substrate.dev'
 license = "GPL-3.0"
-name = 'node-template'
+name = 'gem'
 repository = 'https://github.com/substrate-developer-hub/substrate-node-template/'
 version = '3.0.0'
 
@@ -14,10 +14,10 @@ targets = ['x86_64-unknown-linux-gnu']
 
 [features]
 default = []
-runtime-benchmarks = ['node-template-runtime/runtime-benchmarks']
+runtime-benchmarks = ['gem-runtime/runtime-benchmarks']
 
 [[bin]]
-name = 'node-template'
+name = 'gem'
 
 [dependencies]
 jsonrpc-core = '15.1.0'
@@ -26,7 +26,7 @@ structopt = '0.3.8'
 frame-benchmarking = { git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.1.0' }
 frame-benchmarking-cli = { git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.0.0' }
 
-node-template-runtime = { path='../runtime', version='3.0.0' }
+gem-runtime = { path='../runtime', version='3.0.0' }
 
 pallet-transaction-payment-rpc = { git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.0.0' }
 
