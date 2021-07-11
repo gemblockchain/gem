@@ -6,7 +6,7 @@ homepage = 'https://substrate.dev'
 license = "GPL-3.0"
 name = 'pallet-template'
 readme = 'README.md'
-repository = 'https://github.com/substrate-developer-hub/substrate-node-template/'
+repository = 'https://github.com/gemblockchain/gem/'
 version = '3.0.0'
 
 [package.metadata.docs.rs]

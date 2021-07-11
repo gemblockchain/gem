@@ -1,12 +1,12 @@
 [package]
+name = 'gem'
 authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
 build = 'build.rs'
 description = 'A fresh FRAME-based Substrate node, ready for hacking.'
 edition = '2018'
 homepage = 'https://substrate.dev'
 license = "GPL-3.0"
-name = 'gem'
-repository = 'https://github.com/substrate-developer-hub/substrate-node-template/'
+repository = 'https://github.com/gemblockchain/gem/'
 version = '3.0.0'
 
 [package.metadata.docs.rs]
