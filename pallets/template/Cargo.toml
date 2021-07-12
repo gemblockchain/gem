@@ -1,13 +1,13 @@
 [package]
-authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
+name = 'pallet-template'
+authors = ['DEADBLACKCLOVER <deadblackclover@protonmail.com>']
 description = 'FRAME pallet template for defining custom runtime logic.'
 edition = '2018'
-homepage = 'https://substrate.dev'
+homepage = 'https://gemchain.tech'
 license = "GPL-3.0"
-name = 'pallet-template'
 readme = 'README.md'
-repository = 'https://github.com/gemblockchain/gem/'
-version = '3.0.0'
+repository = 'https://github.com/gemblockchain/gem'
+version = '1.0.0'
 
 [package.metadata.docs.rs]
 targets = ['x86_64-unknown-linux-gnu']
