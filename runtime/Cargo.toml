@@ -1,11 +1,11 @@
 [package]
-authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
+name = 'gem-runtime'
+authors = ['DEADBLACKCLOVER <deadblackclover@protonmail.com>']
 edition = '2018'
-homepage = 'https://substrate.dev'
+homepage = 'https://gemchain.tech'
 license = "GPL-3.0"
-name = 'node-template-runtime'
-repository = 'https://github.com/substrate-developer-hub/substrate-node-template/'
-version = '3.0.0'
+repository = 'https://github.com/gemblockchain/gem'
+version = '1.0.0'
 
 [package.metadata.docs.rs]
 targets = ['x86_64-unknown-linux-gnu']
@@ -24,10 +24,13 @@ hex-literal = { optional=true, version='0.3.1' }
 
 pallet-aura = { default-features=false, git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.0.0' }
 pallet-balances = { default-features=false, git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.0.0' }
+pallet-contracts = { default-features=false, git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.0.0'}
+pallet-contracts-primitives = { default-features=false, git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.0.0'}
+pallet-contracts-rpc-runtime-api = { default-features=false, git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.0.0'}
 pallet-grandpa = { default-features=false, git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.1.0' }
 pallet-randomness-collective-flip = { default-features=false, git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.0.0' }
 pallet-sudo = { default-features=false, git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.0.0' }
-pallet-template = { default-features=false, path='../pallets/template', version='3.0.0' }
+pallet-template = { default-features=false, path='../pallets/template', version='1.0.0' }
 pallet-timestamp = { default-features=false, git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.0.0' }
 pallet-transaction-payment = { default-features=false, git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.0.0' }
 pallet-transaction-payment-rpc-runtime-api = { default-features=false, git='https://github.com/paritytech/substrate.git', rev='d6c33e7ec313f9bd5e319dc0a5a3ace5543f9617', version='3.0.0' }
@@ -68,6 +71,9 @@ std = [
     'frame-system/std',
     'pallet-aura/std',
     'pallet-balances/std',
+    'pallet-contracts/std',
+    'pallet-contracts-primitives/std',
+    'pallet-contracts-rpc-runtime-api/std',
     'pallet-grandpa/std',
     'pallet-randomness-collective-flip/std',
     'pallet-sudo/std',
