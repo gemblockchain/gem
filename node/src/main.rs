@@ -1,4 +1,4 @@
-//! Substrate Node Template CLI library.
+//! Gem node CLI library.
 #![warn(missing_docs)]
 
 mod chain_spec;

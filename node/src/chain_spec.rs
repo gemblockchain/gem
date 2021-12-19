@@ -2,14 +2,15 @@ use gem_runtime::{
     AccountId, AuraConfig, BalancesConfig, GenesisConfig, GrandpaConfig, Signature, SudoConfig,
     SystemConfig, WASM_BINARY,
 };
-use sc_service::ChainType;
+use sc_service::{ChainType, Properties};
+use sc_telemetry::TelemetryEndpoints;
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 use sp_core::{sr25519, Pair, Public};
 use sp_finality_grandpa::AuthorityId as GrandpaId;
 use sp_runtime::traits::{IdentifyAccount, Verify};
 
 // The URL for the telemetry server.
-// const STAGING_TELEMETRY_URL: &str = "wss://telemetry.polkadot.io/submit/";
+const STAGING_TELEMETRY_URL: &str = "wss://telemetry.polkadot.io/submit/";
 
 /// Specialized `ChainSpec`. This is a specialization of the general Substrate ChainSpec type.
 pub type ChainSpec = sc_service::GenericChainSpec<GenesisConfig>;
@@ -37,7 +38,8 @@ pub fn authority_keys_from_seed(s: &str) -> (AuraId, GrandpaId) {
 }
 
 pub fn development_config() -> Result<ChainSpec, String> {
-    let wasm_binary = WASM_BINARY.ok_or_else(|| "Development wasm not available".to_string())?;
+    let wasm_binary =
+        WASM_BINARY.ok_or_else(|| "Development wasm binary not available".to_string())?;
 
     Ok(ChainSpec::from_genesis(
         // Name
@@ -65,18 +67,22 @@ pub fn development_config() -> Result<ChainSpec, String> {
         // Bootnodes
         vec![],
         // Telemetry
-        None,
+        Some(
+            TelemetryEndpoints::new(vec![(STAGING_TELEMETRY_URL.to_string(), 0)])
+                .expect("Testnet telemetry url is valid; qed"),
+        ),
         // Protocol ID
         None,
         // Properties
-        None,
+        Some(gem_properties()),
         // Extensions
         None,
     ))
 }
 
 pub fn local_testnet_config() -> Result<ChainSpec, String> {
-    let wasm_binary = WASM_BINARY.ok_or_else(|| "Development wasm not available".to_string())?;
+    let wasm_binary =
+        WASM_BINARY.ok_or_else(|| "Development wasm binary not available".to_string())?;
 
     Ok(ChainSpec::from_genesis(
         // Name
@@ -119,7 +125,7 @@ pub fn local_testnet_config() -> Result<ChainSpec, String> {
         // Protocol ID
         None,
         // Properties
-        None,
+        Some(gem_properties()),
         // Extensions
         None,
     ))
@@ -134,31 +140,41 @@ fn testnet_genesis(
     _enable_println: bool,
 ) -> GenesisConfig {
     GenesisConfig {
-        system: SystemConfig {
+        frame_system: Some(SystemConfig {
             // Add Wasm runtime to storage.
             code: wasm_binary.to_vec(),
             changes_trie_config: Default::default(),
-        },
-        balances: BalancesConfig {
+        }),
+        pallet_balances: Some(BalancesConfig {
             // Configure endowed accounts with initial balance of 1 << 60.
             balances: endowed_accounts
                 .iter()
                 .cloned()
                 .map(|k| (k, 1 << 60))
                 .collect(),
-        },
-        aura: AuraConfig {
+        }),
+        pallet_aura: Some(AuraConfig {
             authorities: initial_authorities.iter().map(|x| (x.0.clone())).collect(),
-        },
-        grandpa: GrandpaConfig {
+        }),
+        pallet_grandpa: Some(GrandpaConfig {
             authorities: initial_authorities
                 .iter()
                 .map(|x| (x.1.clone(), 1))
                 .collect(),
-        },
-        sudo: SudoConfig {
+        }),
+        pallet_sudo: Some(SudoConfig {
             // Assign network admin rights.
             key: root_key,
-        },
+        }),
     }
+}
+
+pub fn gem_properties() -> Properties {
+    let mut properties = Properties::new();
+
+    properties.insert("ss58Format".into(), 44.into());
+    properties.insert("tokenDecimals".into(), 18.into());
+    properties.insert("tokenSymbol".into(), "GEM".into());
+
+    properties
 }
