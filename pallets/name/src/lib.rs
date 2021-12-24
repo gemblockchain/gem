@@ -65,8 +65,8 @@ decl_error! {
         NameIsTaken,
         /// Name not found.
         NameNotFound,
-        /// Invalid IPFS hash.
-        InvalidIPFSHash,
+        /// Invalid IPFS CID.
+        InvalidIpfsCid,
         /// Signer is not the owner.
         SignerIsNotTheOwner,
     }
@@ -106,7 +106,7 @@ decl_module! {
         }
 
         #[weight = 10_000]
-        pub fn set_file_name(origin, name: Vec<u8>, hash: Vec<u8>) -> dispatch::DispatchResult {
+        pub fn set_file_name(origin, name: Vec<u8>, cid: Vec<u8>) -> dispatch::DispatchResult {
             ensure!(<NameOnwer<T>>::get(&name).is_some(), Error::<T>::NameNotFound);
 
             let signer = ensure_signed(origin)?;
@@ -114,10 +114,12 @@ decl_module! {
 
             ensure!(signer == owner, Error::<T>::SignerIsNotTheOwner);
 
-            // Checking the hash is valid.
+            // Checking the CID is valid.
+            let len = cid.len();
+            ensure!(len == 46 || len == 59, Error::<T>::InvalidIpfsCid);
 
             // Update storage.
-            <FileName>::insert(&name, &hash);
+            <FileName>::insert(&name, &cid);
 
             // Emit an event.
             Self::deposit_event(RawEvent::SetFileName(name));
