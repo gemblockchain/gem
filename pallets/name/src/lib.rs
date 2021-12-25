@@ -33,6 +33,8 @@ decl_storage! {
     trait Store for Module<T: Config> as NameModule {
         // Learn more about declaring storage items:
         // https://substrate.dev/docs/en/knowledgebase/runtime/storage#declaring-storage-items
+        /// Total number of names
+        TotalNames get(fn total_names): u128 = 0;
         /// Store for the owner of the name.
         /// Name => Owner
         NameOnwer get(fn name_owner): map hasher(twox_64_concat) Vec<u8> => Option<T::AccountId>;
@@ -51,6 +53,8 @@ decl_event!(
     {
         /// Create name.
         NameCreate(Name, AccountId),
+        /// Changing owner for name.
+        ChangingOwner(Name, AccountId),
         /// Set file for name.
         SetFileName(Name),
     }
@@ -98,10 +102,30 @@ decl_module! {
 
             // Update storage.
             <NameOnwer<T>>::insert(&name, &signer);
+            <TotalNames>::mutate(|total| *total += 1);
 
             // Emit an event.
             Self::deposit_event(RawEvent::NameCreate(name, signer));
             // Return a successful DispatchResult
+            Ok(())
+        }
+
+        #[weight = 10_000]
+        pub fn change_owner(origin, name: Vec<u8>, new_owner: T::AccountId) -> dispatch::DispatchResult {
+            ensure!(<NameOnwer<T>>::get(&name).is_some(), Error::<T>::NameNotFound);
+
+            let signer = ensure_signed(origin)?;
+            let owner = <NameOnwer<T>>::get(&name).unwrap();
+
+            ensure!(signer == owner, Error::<T>::SignerIsNotTheOwner);
+
+            // Update storage.
+            <NameOnwer<T>>::mutate(&name, |owner| *owner = Some(new_owner));
+
+            // Emit an event.
+            Self::deposit_event(RawEvent::ChangingOwner(name, signer));
+            // Return a successful DispatchResult
+
             Ok(())
         }
 
