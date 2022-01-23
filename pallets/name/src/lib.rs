@@ -38,9 +38,9 @@ decl_storage! {
         /// Store for the owner of the name.
         /// Name => Owner
         NameOnwer get(fn name_owner): map hasher(twox_64_concat) Vec<u8> => Option<T::AccountId>;
-        /// Store for the file of the name.
-        /// Name => File
-        FileName get(fn file_name): map hasher(twox_64_concat) Vec<u8> => Option<Vec<u8>>;
+        /// Store for the data of the name.
+        /// Name => Data
+        DataName get(fn data_name): map hasher(twox_64_concat) Vec<u8> => Vec<u8>;
     }
 }
 
@@ -56,7 +56,7 @@ decl_event!(
         /// Changing owner for name.
         ChangingOwner(Name, AccountId),
         /// Set file for name.
-        SetFileName(Name),
+        SetData(Name),
     }
 );
 
@@ -69,8 +69,6 @@ decl_error! {
         NameIsTaken,
         /// Name not found.
         NameNotFound,
-        /// Invalid IPFS CID.
-        InvalidIpfsCid,
         /// Signer is not the owner.
         SignerIsNotTheOwner,
     }
@@ -125,12 +123,11 @@ decl_module! {
             // Emit an event.
             Self::deposit_event(RawEvent::ChangingOwner(name, signer));
             // Return a successful DispatchResult
-
             Ok(())
         }
 
         #[weight = 10_000]
-        pub fn set_file_name(origin, name: Vec<u8>, cid: Vec<u8>) -> dispatch::DispatchResult {
+        pub fn set_data(origin, name: Vec<u8>, new_data: Vec<u8>) -> dispatch::DispatchResult {
             ensure!(<NameOnwer<T>>::get(&name).is_some(), Error::<T>::NameNotFound);
 
             let signer = ensure_signed(origin)?;
@@ -138,15 +135,11 @@ decl_module! {
 
             ensure!(signer == owner, Error::<T>::SignerIsNotTheOwner);
 
-            // Checking the CID is valid.
-            let len = cid.len();
-            ensure!(len == 46 || len == 59, Error::<T>::InvalidIpfsCid);
-
             // Update storage.
-            <FileName>::insert(&name, &cid);
+            <DataName>::mutate(&name, |data| *data = new_data);
 
             // Emit an event.
-            Self::deposit_event(RawEvent::SetFileName(name));
+            Self::deposit_event(RawEvent::SetData(name));
             // Return a successful DispatchResult
             Ok(())
         }

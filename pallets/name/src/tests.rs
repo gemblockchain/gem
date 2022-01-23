@@ -38,7 +38,7 @@ fn it_works_set_file_name() {
             b"monero".to_vec()
         ));
 
-        assert_ok!(NameModule::set_file_name(
+        assert_ok!(NameModule::set_data(
             Origin::signed(1),
             b"monero".to_vec(),
             b"QmcWpgfueHJiPzKSodUSPdvt2v9X7t5s8KdvfC3y6gm1Zc".to_vec()
@@ -46,8 +46,8 @@ fn it_works_set_file_name() {
 
         // Read pallet storage and assert an expected result.
         assert_eq!(
-            NameModule::file_name(b"monero".to_vec()),
-            Some(b"QmcWpgfueHJiPzKSodUSPdvt2v9X7t5s8KdvfC3y6gm1Zc".to_vec())
+            NameModule::data_name(b"monero".to_vec()),
+            b"QmcWpgfueHJiPzKSodUSPdvt2v9X7t5s8KdvfC3y6gm1Zc".to_vec()
         );
     });
 }
@@ -56,7 +56,7 @@ fn it_works_set_file_name() {
 fn correct_error_for_set_file_name() {
     new_test_ext().execute_with(|| {
         assert_noop!(
-            NameModule::set_file_name(
+            NameModule::set_data(
                 Origin::signed(1),
                 b"monero".to_vec(),
                 b"QmcWpgfueHJiPzKSodUSPdvt2v9X7t5s8KdvfC3y6gm1Zc".to_vec()
@@ -70,7 +70,7 @@ fn correct_error_for_set_file_name() {
         ));
 
         assert_noop!(
-            NameModule::set_file_name(
+            NameModule::set_data(
                 Origin::signed(2),
                 b"monero".to_vec(),
                 b"QmcWpgfueHJiPzKSodUSPdvt2v9X7t5s8KdvfC3y6gm1Zc".to_vec()
