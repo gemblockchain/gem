@@ -17,7 +17,12 @@ fn correct_error_for_create_name() {
     new_test_ext().execute_with(|| {
         assert_noop!(
             NameModule::create_name(Origin::signed(1), b"too_looooooooong_test_name".to_vec()),
-            Error::<Test>::TooLong
+            Error::<Test>::NameTooLong
+        );
+
+        assert_noop!(
+            NameModule::create_name(Origin::signed(1), b"t".to_vec()),
+            Error::<Test>::NameTooShort
         );
 
         assert_ok!(NameModule::create_name(Origin::signed(1), b"test".to_vec()));
@@ -30,7 +35,7 @@ fn correct_error_for_create_name() {
 }
 
 #[test]
-fn it_works_set_file_name() {
+fn it_works_set_data() {
     new_test_ext().execute_with(|| {
         // Dispatch a signed extrinsic.
         assert_ok!(NameModule::create_name(
@@ -53,7 +58,7 @@ fn it_works_set_file_name() {
 }
 
 #[test]
-fn correct_error_for_set_file_name() {
+fn correct_error_for_set_data() {
     new_test_ext().execute_with(|| {
         assert_noop!(
             NameModule::set_data(
@@ -85,7 +90,11 @@ fn it_works_change_owner() {
     new_test_ext().execute_with(|| {
         // Dispatch a signed extrinsic.
         assert_ok!(NameModule::create_name(Origin::signed(1), b"test".to_vec()));
-        assert_ok!(NameModule::change_owner(Origin::signed(1), b"test".to_vec(), 2));
+        assert_ok!(NameModule::change_owner(
+            Origin::signed(1),
+            b"test".to_vec(),
+            2
+        ));
 
         // Read pallet storage and assert an expected result.
         assert_eq!(NameModule::name_owner(b"test".to_vec()), Some(2));

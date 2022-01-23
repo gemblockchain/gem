@@ -53,12 +53,14 @@ impl system::Config for Test {
 }
 
 parameter_types! {
-    pub const MaxLength: usize = 16;
+    pub const NameMaxLength: usize = 16;
+    pub const NameMinLength: usize = 2;
 }
 
 impl pallet_name::Config for Test {
     type Event = Event;
-    type MaxLength = MaxLength;
+    type NameMaxLength = NameMaxLength;
+    type NameMinLength = NameMinLength;
 }
 
 // Build genesis storage according to the mock runtime.

@@ -21,7 +21,9 @@ pub trait Config: frame_system::Config {
     /// Because this pallet emits events, it depends on the runtime's definition of an event.
     type Event: From<Event<Self>> + Into<<Self as frame_system::Config>::Event>;
     /// The maximum length a name may be.
-    type MaxLength: Get<usize>;
+    type NameMaxLength: Get<usize>;
+    /// The minimum length a name may be.
+    type NameMinLength: Get<usize>;
 }
 
 // The pallet's runtime storage items.
@@ -55,7 +57,7 @@ decl_event!(
         NameCreate(Name, AccountId),
         /// Changing owner for name.
         ChangingOwner(Name, AccountId),
-        /// Set file for name.
+        /// Set data for name.
         SetData(Name),
     }
 );
@@ -64,7 +66,9 @@ decl_event!(
 decl_error! {
     pub enum Error for Module<T: Config> {
         /// A name is too long.
-        TooLong,
+        NameTooLong,
+        /// A name is too short.
+        NameTooShort,
         /// This name has already been created.
         NameIsTaken,
         /// Name not found.
@@ -86,11 +90,14 @@ decl_module! {
         fn deposit_event() = default;
 
         // The maximum length a name may be.
-        const MaxLength: u32 = T::MaxLength::get() as u32;
+        const NameMaxLength: u32 = T::NameMaxLength::get() as u32;
+        /// The minimum length a name may be.
+        const NameMinLength: u32 = T::NameMinLength::get() as u32;
 
         #[weight = 10_000]
         pub fn create_name(origin, name: Vec<u8>) -> dispatch::DispatchResult {
-            ensure!(name.len() <= T::MaxLength::get(), Error::<T>::TooLong);
+            ensure!(name.len() >= T::NameMinLength::get(), Error::<T>::NameTooShort);
+            ensure!(name.len() <= T::NameMaxLength::get(), Error::<T>::NameTooLong);
             ensure!(<NameOnwer<T>>::get(&name).is_none(), Error::<T>::NameIsTaken);
 
             // Check that the extrinsic was signed and get the signer.
